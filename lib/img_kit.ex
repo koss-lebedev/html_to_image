@@ -1,0 +1,2 @@
+defmodule IMGKit do
+end
