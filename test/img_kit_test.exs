@@ -3,7 +3,9 @@ defmodule IMGKitTest do
   doctest IMGKit
 
   test "simple method call" do
-    assert IMGKit.convert("<html>TEST</html>") == "<html>TEST</html>"
+    template = "<html><p>Hello, <b>IMGKit</b>!</p></html>\n\n"
+    { result, _ } = IMGKit.convert(template)
+    assert result == :ok
   end
 
 end

@@ -3,8 +3,6 @@ defmodule IMGKit do
     Provides a wrapper around `wkhtmltoimage` for creating images from HTML using WebKit engine
   """
 
-  alias Porcelain.Result
-
   @doc """
     Converts given HTML string into binary image
   """
@@ -14,17 +12,25 @@ defmodule IMGKit do
 
   def convert(html, options) do
     executable = Keyword.get(options, :wkhtmltoimage_path) || executable_path
-    base_filename = Path.join(System.tmp_dir, random_filename)
-    output_file = base_filename <> ".jpg"
+    template_name = template_file(html)
+    arguments = [ "--format", :jpg, template_name, "-" ]
 
-    shell_params = [format: :jpg]
-    arguments = List.flatten([ shell_params, "-q", "-", "-" ])
-
-    %Result{ out: bin_data, status: status, err: error } = Porcelain.exec(
-      executable, arguments, [in: html, out: :string, err: :string]
+    result = Porcelain.exec(
+      executable, arguments, [in: html, out: :iodata, err: :string]
     )
 
-    html
+    case result.status do
+      0 -> { :ok, result.out }
+      _ -> { :error, result.error }
+    end
+  end
+
+  defp template_file(data) do
+    template = Path.join(System.tmp_dir, random_filename) <> ".jpg"
+    {:ok, file} = File.open template, [:write]
+    IO.binwrite file, data
+    File.close file
+    template
   end
 
   defp executable_path do
