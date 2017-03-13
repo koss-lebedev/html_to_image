@@ -7,14 +7,20 @@ defmodule IMGKit.Mixfile do
      elixir: "~> 1.3",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
-     deps: deps()]
+     deps: deps(),
+
+     name: "IMGKit",
+     source_url: "https://github.com/koss-lebedev/IMGKit"
+     ]
   end
 
   # Configuration for the OTP application
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger]]
+    [
+      applications: [:logger, :porcelain]
+    ]
   end
 
   # Dependencies can be Hex packages:
@@ -27,6 +33,9 @@ defmodule IMGKit.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    []
+    [
+      {:ex_doc, "~> 0.14", only: :dev, runtime: false},
+      {:porcelain, "~> 2.0"}
+    ]
   end
 end
