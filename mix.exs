@@ -1,16 +1,17 @@
-defmodule IMGKit.Mixfile do
+defmodule HtmlToImage.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :img_kit,
+    [app: :html_to_image,
      version: "0.1.0",
      elixir: "~> 1.3",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      deps: deps(),
-
-     name: "IMGKit",
-     source_url: "https://github.com/koss-lebedev/IMGKit"
+     name: "HtmlToImage",
+     source_url: "https://github.com/koss-lebedev/html_to_image",
+     description: description(),
+     package: package()
      ]
   end
 
@@ -38,4 +39,21 @@ defmodule IMGKit.Mixfile do
       {:porcelain, "~> 2.0"}
     ]
   end
+
+  defp description do
+    """
+    Elixir wrapper around `wkhtmltoimage` tool for converting HTML into images
+    """
+  end
+
+  defp package do
+    [
+      licenses: ["MIT"],
+      maintainers: ["Constantine Lebedev"],
+      links: %{
+        "GitHub": "https://github.com/koss-lebedev/html_to_image"
+      }
+    ]
+  end
+
 end

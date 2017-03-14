@@ -1,19 +1,31 @@
-defmodule IMGKit do
+defmodule HtmlToImage do
   @moduledoc """
-    Provides a wrapper around `wkhtmltoimage` for creating images from HTML using WebKit engine
+  Provides a wrapper around `wkhtmltoimage` for creating images from HTML using WebKit engine
   """
 
   @doc """
-    Converts given HTML string into binary image
+  Converts given HTML string into binary image
   """
   def convert(html) do
     convert(html, [])
   end
 
+  @doc """
+  Converts given HTML string into binary image
+
+  ## Options
+
+      wkhtmltoimage_path - specify a path where wkhtmltoimage tool is installed
+      format - the format of output image file. Default is JPG
+  """
   def convert(html, options) do
     executable = Keyword.get(options, :wkhtmltoimage_path) || executable_path
     template_name = template_file(html)
-    arguments = [ "--format", :jpg, template_name, "-" ]
+    arguments = [
+      "--format", Keyword.get(options, :format) || :jpg,
+      template_name,
+      "-"
+    ]
 
     result = Porcelain.exec(
       executable, arguments, [in: html, out: :iodata, err: :string]
@@ -37,7 +49,7 @@ defmodule IMGKit do
     {path, result} = System.cmd("which", ["wkhtmltoimage"])
     case result do
       0 -> path |> String.trim
-      _ -> Application.get_env(:img_kit, :wkhtmltoimage_path) || "/usr/local/bin/wkhtmltoimage"
+      _ -> Application.get_env(:html_to_image, :wkhtmltoimage_path) || "/usr/local/bin/wkhtmltoimage"
     end
   end
 

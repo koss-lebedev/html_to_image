@@ -1,4 +1,4 @@
 use Mix.Config
 
-config :img_kit,
+config :html_to_image,
   wkhtmltoimage_path: "/usr/local/bin/wkhtmltoimage"
