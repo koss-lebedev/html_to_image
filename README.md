@@ -1,5 +1,8 @@
 # HtmlToImage
 
+[![Hex.pm version](https://img.shields.io/hexpm/v/html_to_image.svg)](https://hex.pm/packages/html_to_image)
+[![Hex.pm downloads](https://img.shields.io/hexpm/dt/html_to_image.svg)](https://hex.pm/packages/html_to_image)
+
 Elixir wrapper around `wkhtmltoimage` tool for converting HTML into images
 
 ## Installation
