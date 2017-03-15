@@ -20,3 +20,11 @@ def application do
 end
 ```
 
+## Usage
+
+```elixir
+template = "<html><p>Hello, <b>HtmlToImage</b>!</p></html>"
+{ :ok, data } = HtmlToImage.convert(template)
+```
+
+Complete API reference is available at [hexdocs](https://hexdocs.pm/html_to_image/api-reference.html)

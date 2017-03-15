@@ -11,7 +11,9 @@ defmodule HtmlToImage do
   end
 
   @doc """
-  Converts given HTML string into binary image
+  Converts given HTML string into binary image.
+
+  Returns binary data <iodata> of the generated image
 
   ## Options
 

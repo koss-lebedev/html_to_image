@@ -3,7 +3,7 @@ defmodule HtmlToImageTest do
   doctest HtmlToImage
 
   test "simple method call" do
-    template = "<html><p>Hello, <b>HtmlToImage</b>!</p></html>\n\n"
+    template = "<html><p>Hello, <b>HtmlToImage</b>!</p></html>"
     { result, _ } = HtmlToImage.convert(template)
     assert result == :ok
   end
