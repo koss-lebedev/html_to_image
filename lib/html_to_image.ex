@@ -25,6 +25,7 @@ defmodule HtmlToImage do
     template_name = template_file(html)
     arguments = [
       "--format", Keyword.get(options, :format) || :jpg,
+      "--width", Integer.to_string(Keyword.get(options, :width) || 1024),
       template_name,
       "-"
     ]
@@ -40,7 +41,7 @@ defmodule HtmlToImage do
   end
 
   defp template_file(data) do
-    template = Path.join(System.tmp_dir, random_filename) <> ".jpg"
+    template = Path.join(System.tmp_dir, random_filename) <> ".html"
     {:ok, file} = File.open template, [:write]
     IO.binwrite file, data
     File.close file
