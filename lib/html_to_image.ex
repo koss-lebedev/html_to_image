@@ -36,7 +36,7 @@ defmodule HtmlToImage do
 
     case result.status do
       0 -> { :ok, result.out }
-      _ -> { :error, result.error }
+      _ -> if result.err == "", do: { :ok, result.out }, else: { :error, result.err }
     end
   end
 
