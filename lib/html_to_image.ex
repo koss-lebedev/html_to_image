@@ -26,6 +26,7 @@ defmodule HtmlToImage do
     arguments = [
       "--format", Keyword.get(options, :format) || :jpg,
       "--width", Integer.to_string(Keyword.get(options, :width) || 1024),
+      "--quality", Iteger.to_string(Keyword.get(options, :quality) || 94),
       template_name,
       "-"
     ]
