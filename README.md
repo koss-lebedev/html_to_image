@@ -11,7 +11,7 @@ Elixir wrapper around `wkhtmltoimage` tool for converting HTML into images
 
 ```elixir
 def deps do
-  [{:html_to_image, "~> 0.1.0"}]
+  [{:html_to_image, "~> 0.1.4"}]
 end
 ```
 
@@ -28,6 +28,12 @@ end
 ```elixir
 template = "<html><p>Hello, <b>HtmlToImage</b>!</p></html>"
 { :ok, data } = HtmlToImage.convert(template)
+```
+
+```elixir
+template = "<html><p>We are purging the html template on disk vs waiting for the os gc to clean the tmp dir, in this example</p></html>"
+options = [{:purge_template, true}] 
+{ :ok, data } = HtmlToImage.convert(template, options)
 ```
 
 Complete API reference is available at [hexdocs](https://hexdocs.pm/html_to_image/api-reference.html)

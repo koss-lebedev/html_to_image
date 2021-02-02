@@ -3,6 +3,10 @@ defmodule HtmlToImage do
   Provides a wrapper around `wkhtmltoimage` for creating images from HTML using WebKit engine
   """
 
+  @reserved_keywords [:wkhtmltoimage_path, :purge_template ]
+  @default_arguments  ["--format", :jpg, "--width",  "1024", "--quality", "94"]
+  @default_path "/usr/local/bin/wkhtmltoimage"
+
   @doc """
   Converts given HTML string into binary image
   """
@@ -21,28 +25,40 @@ defmodule HtmlToImage do
       format - the format of output image file. Default is JPG
   """
   def convert(html, options) do
-    executable = Keyword.get(options, :wkhtmltoimage_path) || executable_path
+    executable = Keyword.get(options, :wkhtmltoimage_path) || executable_path()
     template_name = template_file(html)
-    arguments = [
-      "--format", Keyword.get(options, :format) || :jpg,
-      "--width", Integer.to_string(Keyword.get(options, :width) || 1024),
-      "--quality", Integer.to_string(Keyword.get(options, :quality) || 94),
-      template_name,
-      "-"
-    ]
+
+    keys = Keyword.keys(options)
+    search_keys = Enum.reject(keys, fn(x) -> Enum.member?(@reserved_keywords, x) end)
+
+    found_arguments = Enum.map(search_keys, fn(x) ->
+    value = Keyword.get(options, x)
+    ["--" <> to_string(x), value]
+    end)
+
+    flattened_arguments = List.flatten(found_arguments)
+
+    merged_arguments = Keyword.merge(@default_arguments, flattened_arguments)
+
+    arguments = merged_arguments ++ [template_name, "-" ]
 
     result = Porcelain.exec(
       executable, arguments, [in: html, out: :iodata, err: :string]
     )
 
     case result.status do
-      0 -> { :ok, result.out }
+      0 ->
+        purge_template? = Keyword.get(options, :purge_template) || false
+
+        if purge_template? == true, do: File.rm(template_name)
+
+        { :ok, result.out }
       _ -> if result.err == "", do: { :ok, result.out }, else: { :error, result.err }
     end
   end
 
   defp template_file(data) do
-    template = Path.join(System.tmp_dir, random_filename) <> ".html"
+    template = Path.join(System.tmp_dir, random_filename()) <> ".html"
     {:ok, file} = File.open template, [:write]
     IO.binwrite file, data
     File.close file
@@ -53,7 +69,7 @@ defmodule HtmlToImage do
     {path, result} = System.cmd("which", ["wkhtmltoimage"])
     case result do
       0 -> path |> String.trim
-      _ -> Application.get_env(:html_to_image, :wkhtmltoimage_path) || "/usr/local/bin/wkhtmltoimage"
+      _ -> Application.get_env(:html_to_image, :wkhtmltoimage_path) || @default_path
     end
   end
 
