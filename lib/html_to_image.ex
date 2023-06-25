@@ -21,7 +21,7 @@ defmodule HtmlToImage do
       format - the format of output image file. Default is JPG
   """
   def convert(html, options) do
-    executable = Keyword.get(options, :wkhtmltoimage_path) || executable_path
+    executable = Keyword.get(options, :wkhtmltoimage_path) || executable_path()
     template_name = template_file(html)
     arguments = [
       "--format", Keyword.get(options, :format) || :jpg,
@@ -42,7 +42,7 @@ defmodule HtmlToImage do
   end
 
   defp template_file(data) do
-    template = Path.join(System.tmp_dir, random_filename) <> ".html"
+    template = Path.join(System.tmp_dir, random_filename()) <> ".html"
     {:ok, file} = File.open template, [:write]
     IO.binwrite file, data
     File.close file
